@@ -3,24 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="description"
-        content="Deformable Neural Radiance Fields creates free-viewpoint portraits (nerfies) from casually captured videos.">
-  <meta name="keywords" content="DextER">
+        content="DextER: Language-driven Dexterous Grasp Generation with Embodied Reasoning. DextER introduces contact-based embodied reasoning for language-driven dexterous grasp generation.">
+  <meta name="keywords" content="DextER, dexterous grasping, embodied reasoning, language-driven grasping, robotic manipulation, contact prediction">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>DextER: Language-driven Dexterous Grasp Generation with Embodied Reasoning</title>
-
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script> -->
-  <script>
-    window.dataLayer = window.dataLayer || [];
-
-    function gtag() {
-      dataLayer.push(arguments);
-    }
-
-    gtag('js', new Date());
-
-    gtag('config', 'G-PYVRSFMDRL');
-  </script>
 
   <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
         rel="stylesheet">
@@ -39,6 +25,79 @@
   <script src="./static/js/bulma-carousel.min.js"></script>
   <script src="./static/js/bulma-slider.min.js"></script>
   <script src="./static/js/index.js"></script>
+
+  <style>
+    .results-grid {
+      display: grid;
+      gap: 1.5rem;
+    }
+    .result-item {
+      text-align: center;
+    }
+    .result-item img {
+      border-radius: 4px;
+    }
+    .result-caption {
+      font-style: italic;
+      color: #555;
+      margin-top: 0.5rem;
+      font-size: 0.95rem;
+    }
+    .highlight-box {
+      background: #f5f5f5;
+      border-left: 4px solid #3273dc;
+      padding: 1.2rem 1.5rem;
+      margin-bottom: 1rem;
+      border-radius: 0 4px 4px 0;
+    }
+    .highlight-box p {
+      margin-bottom: 0;
+    }
+    .table-container {
+      overflow-x: auto;
+    }
+    table.results-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+    }
+    table.results-table th, table.results-table td {
+      padding: 0.5rem 0.7rem;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+    }
+    table.results-table thead th {
+      border-bottom: 2px solid #333;
+      font-weight: 600;
+    }
+    table.results-table tbody tr:last-child {
+      font-weight: 600;
+    }
+    table.results-table tbody tr:last-child td {
+      border-bottom: 2px solid #333;
+    }
+    .section-divider {
+      border: none;
+      border-top: 1px solid #eee;
+      margin: 2rem 0;
+    }
+    .contribution-item {
+      margin-bottom: 1rem;
+    }
+    .contribution-item strong {
+      color: #3273dc;
+    }
+    a.ref-link {
+      text-decoration: none;
+      color: #3273dc;
+      font-size: 0.85em;
+      vertical-align: super;
+      line-height: 0;
+    }
+    a.ref-link:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
 
@@ -50,42 +109,13 @@
       <span aria-hidden="true"></span>
     </a>
   </div>
-  <!-- <div class="navbar-menu">
-    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
-      <a class="navbar-item" href="https://junha-l.github.io">
-      <span class="icon">
-          <i class="fas fa-home"></i>
-      </span>
-      </a>
-
-      <div class="navbar-item has-dropdown is-hoverable">
-        <a class="navbar-link">
-          More Research
-        </a>
-        <div class="navbar-dropdown">
-          <a class="navbar-item" href="https://hypernerf.github.io">
-            HyperNeRF
-          </a>
-          <a class="navbar-item" href="https://nerfies.github.io">
-            Nerfies
-          </a>
-          <a class="navbar-item" href="https://latentfusion.github.io">
-            LatentFusion
-          </a>
-          <a class="navbar-item" href="https://photoshape.github.io">
-            PhotoShape
-          </a>
-        </div>
-      </div>
-    </div>
-
-  </div> -->
 </nav>
 
 
+<!-- Title / Authors -->
 <section class="hero">
   <div class="hero-body">
-    <div class="container is-max-desktop">
+    <div class="container is-max-widescreen">
       <div class="columns is-centered">
         <div class="column has-text-centered">
           <h1 class="title is-1 publication-title">DextER: Language-driven Dexterous Grasp Generation with Embodied Reasoning</h1>
@@ -104,11 +134,15 @@
             <span class="author-block"><sup>2</sup>RLWRLD</span>
           </div>
 
+          <div class="is-size-5 publication-authors" style="margin-top: 0.5rem;">
+            <span class="author-block" style="font-weight: 600;">&nbsp;</span>
+          </div>
+
           <div class="column has-text-centered">
             <div class="publication-links">
               <!-- PDF Link. -->
               <span class="link-block">
-                <a href="https://arxiv.org/pdf/2011.12948"
+                <a href="https://arxiv.org/pdf/2601.16046"
                    class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
                       <i class="fas fa-file-pdf"></i>
@@ -117,7 +151,7 @@
                 </a>
               </span>
               <span class="link-block">
-                <a href="https://arxiv.org/abs/2011.12948"
+                <a href="https://arxiv.org/abs/2601.16046"
                    class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
                       <i class="ai ai-arxiv"></i>
@@ -127,7 +161,7 @@
               </span>
               <!-- Code Link. -->
               <span class="link-block">
-                <a href="https://github.com/google/nerfies"
+                <a href="https://github.com/junha-l/dexter"
                    class="external-link button is-normal is-rounded is-dark" disabled>
                   <span class="icon">
                       <i class="fab fa-github"></i>
@@ -137,13 +171,14 @@
               </span>
               <!-- Dataset Link. -->
               <span class="link-block">
-                <a href="https://github.com/google/nerfies/releases/tag/0.1"
+                <a href="#"
                    class="external-link button is-normal is-rounded is-dark" disabled>
                   <span class="icon">
                       <i class="far fa-images"></i>
                   </span>
                   <span>Data (Coming Soon)</span>
                   </a>
+              </span>
             </div>
 
           </div>
@@ -153,87 +188,29 @@
   </div>
 </section>
 
-<section class="hero teaser">
-  <div class="container is-max-desktop">
-    <div class="hero-body">
-      <!-- <video id="teaser" autoplay muted loop playsinline height="100%">
-        <source src="./static/videos/teaser.mp4"
-                type="video/mp4">
-      </video>
-      <h2 class="subtitle has-text-centered">
-        <span class="dnerf">Nerfies</span> turns selfie videos from your phone into
-        free-viewpoint
-        portraits.
-      </h2> -->
+
+<!-- Teaser -->
+<section class="hero teaser" style="background: #fafafa; padding-top: 3rem">
+  <div class="container is-max-widescreen">
+    <div class="hero-body" style="padding-top: 0;">
+      <img src="./static/images/teaser.webp"
+           alt="DextER teaser: Embodied reasoning for language-driven dexterous grasp generation"
+           style="width: 100%; border-radius: 8px;">
+      <h2 class="subtitle has-text-centered" style="margin-top: 1rem;">
+        <b>DextER</b> introduces contact-based embodied reasoning for language-driven dexterous grasp generation.
+        Given a 3D object and instruction, DextER autoregressively predicts which finger links contact where on the object surface before generating the final grasp.
+      </h2>
     </div>
   </div>
 </section>
 
 
-<section class="hero is-light is-small">
-  <div class="hero-body">
-    <!-- <div class="container">
-      <div id="results-carousel" class="carousel results-carousel">
-        <div class="item item-steve">
-          <video poster="" id="steve" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/steve.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-chair-tp">
-          <video poster="" id="chair-tp" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/chair-tp.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-shiba">
-          <video poster="" id="shiba" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/shiba.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-fullbody">
-          <video poster="" id="fullbody" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/fullbody.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-blueshirt">
-          <video poster="" id="blueshirt" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/blueshirt.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-mask">
-          <video poster="" id="mask" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/mask.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-coffee">
-          <video poster="" id="coffee" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/coffee.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-toby">
-          <video poster="" id="toby" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/toby2.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-      </div>
-    </div> -->
-  </div>
-</section>
-
-
+<!-- Abstract -->
 <section class="section">
-  <div class="container is-max-desktop">
-    <!-- Abstract. -->
+  <div class="container is-max-widescreen">
     <div class="columns is-centered has-text-centered">
       <div class="column is-four-fifths">
-        <h2 class="title is-3">Abstract</h2>
+        <h2 class="title is-2">Abstract</h2>
         <div class="content has-text-justified">
           <p>
           Language-driven dexterous grasp generation requires the models to understand task semantics, 3D geometry, and complex hand-object interactions.
@@ -245,174 +222,338 @@
           <b>DextER</b> autoregressively generates embodied contact tokens specifying which finger links contact where on the object surface, followed by grasp tokens encoding the hand configuration.
           </p>
           <p>
-          On DexGYS, <b>DextER</b> achieves 67.14% success rate, outperforming state-of-the-art by 3.83%p with 96.4% improvement in intention alignment.
+          On DexGYS<a class="ref-link" href="#ref-dexgys">[1]</a>, <b>DextER</b> achieves 67.14% success rate, outperforming state-of-the-art by 3.83%p with 96.4% improvement in intention alignment.
           We also demonstrate steerable generation through partial contact specification, providing fine-grained control over grasp synthesis.
           </p>
         </div>
       </div>
     </div>
-    <!--/ Abstract. -->
-
-    <!-- Paper video. -->
-    <!-- <div class="columns is-centered has-text-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3">Video</h2>
-        <div class="publication-video">
-          <iframe src="https://www.youtube.com/embed/MrKrnHhk8IA?rel=0&amp;showinfo=0"
-                  frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-        </div>
-      </div>
-    </div> -->
-    <!--/ Paper video. -->
   </div>
 </section>
 
 
+<!-- Key Contributions -->
+<section class="section" style="padding-top: 0;">
+  <div class="container is-max-widescreen">
+    <div class="columns is-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-2 has-text-centered">Key Contributions</h2>
+        <div class="content has-text-justified">
+
+          <div class="contribution-item">
+            <div class="highlight-box">
+              <p><strong>Embodied Contact Reasoning:</strong>
+              We propose contact-centric reasoning as an effective embodied thinking process for language-driven dexterous manipulation, achieving state-of-the-art performance by explicitly modeling the physical interaction structure between multi-fingered hands and objects.</p>
+            </div>
+          </div>
+
+          <div class="contribution-item">
+            <div class="highlight-box">
+              <p><strong>Physics-based Contact Annotations:</strong>
+              We annotate DexGYS<a class="ref-link" href="#ref-dexgys">[1]</a> and Dexonomy<a class="ref-link" href="#ref-dexonomy">[2]</a> datasets with physics-based contact annotations using MuJoCo simulator, and generate natural language grasp descriptions using a vision-language model, enabling large-scale training of contact-aware models.</p>
+            </div>
+          </div>
+
+          <div class="contribution-item">
+            <div class="highlight-box">
+              <p><strong>Steerable Grasp Generation:</strong>
+              Our autoregressive generation framework enables steerable grasp generation, where users can guide the model by specifying partial contact constraints (e.g., which fingers should contact the object, or precise contact positions), and the model completes the remaining sequence while respecting these constraints.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Method -->
 <section class="section">
-  <div class="container is-max-desktop">
+  <div class="container is-max-widescreen">
+    <div class="columns is-centered has-text-centered">
+      <div class="column">
+        <h2 class="title is-2">Method</h2>
+      </div>
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-full">
+        <img src="./static/images/architecture.webp"
+             alt="DextER model architecture"
+             style="width: 100%;">
+        <div class="content has-text-justified" style="margin-top: 1.5rem;">
+          <p>
+            <b>DextER</b> processes 3D point clouds and language instructions to predict dexterous grasping actions for the multi-fingered robotic hand.
+            The input point clouds and textual grasp descriptions are encoded into tokens using a pretrained point cloud encoder (<b>PartField</b><a class="ref-link" href="#ref-partfield">[3]</a>) and a text tokenizer.
+            The LLM backbone (<b>Qwen2.5 0.5B</b>) fuses point cloud embeddings with text prompts and autoregressively generates discretized <b>contact</b> and <b>action tokens</b>.
+            The generated contact and action tokens are de-tokenized into contact positions, hand joint configurations, and grasp poses.
+          </p>
+          <p>
+            The model first produces <i>embodied contact tokens</i> that specify which finger links contact the object and their 3D positions on the object surface, followed by <i>grasp tokens</i> that encode the complete hand configuration.
+            All tokens are generated autoregressively within a unified next-token prediction framework, enabling interpretable contact reasoning as an intermediate step.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Results on DexGYS -->
+<section class="section">
+  <div class="container is-max-widescreen">
+    <div class="columns is-centered has-text-centered">
+      <div class="column">
+        <h2 class="title is-2">Results on DexGYS</h2>
+      </div>
+    </div>
+
+    <!-- Quantitative Results Table -->
+    <div class="columns is-centered">
+      <div class="column is-full">
+        <h3 class="title is-4">Quantitative Results</h3>
+        <div class="table-container">
+          <table class="results-table">
+            <thead>
+              <tr>
+                <th rowspan="2" style="text-align: left;">Method</th>
+                <th colspan="3">Intention</th>
+                <th colspan="3">Quality</th>
+                <th colspan="3">Diversity</th>
+              </tr>
+              <tr>
+                <th>P-FID &darr;</th>
+                <th>CD &darr;</th>
+                <th>Con. &darr;</th>
+                <th>Success &uarr;</th>
+                <th>Q<sub>1</sub> &uarr;</th>
+                <th>Pen. &darr;</th>
+                <th>&delta;<sub>t</sub> &uarr;</th>
+                <th>&delta;<sub>r</sub> &uarr;</th>
+                <th>&delta;<sub>q</sub> &uarr;</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="text-align: left;">GraspCVAE<a class="ref-link" href="#ref-graspcvae">[5]</a></td>
+                <td>29.02</td><td>3.14</td><td>0.96</td>
+                <td>29.12</td><td>0.54</td><td>0.55</td>
+                <td>0.18</td><td>1.76</td><td>0.18</td>
+              </tr>
+              <tr>
+                <td style="text-align: left;">GraspTTA<a class="ref-link" href="#ref-grasptta">[6]</a></td>
+                <td>33.15</td><td>12.19</td><td>1.11</td>
+                <td>43.46</td><td>0.71</td><td>0.19</td>
+                <td>2.11</td><td>6.15</td><td>3.87</td>
+              </tr>
+              <tr>
+                <td style="text-align: left;">SceneDiffusers<a class="ref-link" href="#ref-scenediffusers">[7]</a></td>
+                <td>7.93</td><td>1.68</td><td>0.45</td>
+                <td>62.24</td><td>0.83</td><td>0.25</td>
+                <td>0.35</td><td>3.46</td><td>0.39</td>
+              </tr>
+              <tr>
+                <td style="text-align: left;">DGTR<a class="ref-link" href="#ref-dgtr">[4]</a></td>
+                <td>15.77</td><td>2.90</td><td>0.78</td>
+                <td>51.91</td><td>0.78</td><td>0.16</td>
+                <td>2.05</td><td>14.01</td><td>4.30</td>
+              </tr>
+              <tr>
+                <td style="text-align: left;">DexGYSNet<a class="ref-link" href="#ref-dexgys">[1]</a></td>
+                <td>5.60</td><td>1.20</td><td>0.36</td>
+                <td>63.31</td><td>0.83</td><td>0.22</td>
+                <td>6.12</td><td>55.68</td><td>6.12</td>
+              </tr>
+              <tr>
+                <td style="text-align: left;">DextER (w/o ER)</td>
+                <td>0.30</td><td>1.95</td><td>0.40</td>
+                <td>62.37</td><td>0.66</td><td>0.44</td>
+                <td>8.78</td><td>77.13</td><td>13.77</td>
+              </tr>
+              <tr>
+                <td style="text-align: left;"><b>DextER</b></td>
+                <td><b>0.20</b></td><td><b>1.46</b></td><td><b>0.34</b></td>
+                <td><b>67.14</b></td><td><b>0.89</b></td><td><b>0.37</b></td>
+                <td><b>8.84</b></td><td><b>77.98</b></td><td><b>13.63</b></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="has-text-centered" style="margin-top: 1rem; color: #666; font-size: 0.9rem;">
+          Language-conditioned grasp generation on DexGYS validation set. DextER outperforms all baselines with substantial improvements in intention alignment (P-FID, CD, Con.), physical quality (Success, Q<sub>1</sub>, Pen.), and diversity (&delta;<sub>t</sub>, &delta;<sub>r</sub>, &delta;<sub>q</sub>).
+        </p>
+      </div>
+    </div>
+
+    <!-- Qualitative Results on DexGYS -->
+    <div class="columns is-centered">
+      <div class="column is-full">
+        <h3 class="title is-4">Qualitative Results</h3>
+        <div class="result-item">
+          <img src="./static/images/qual.webp"
+               alt="Qualitative results on DexGYS benchmark"
+               style="width: 100%;">
+          <p class="result-caption">
+            Given object point clouds and natural language instructions, DextER generates embodied contact predictions (shown as colored spheres on object surfaces) followed by grasp configurations.
+            The model successfully captures task-specific contact patterns and produces physically plausible grasps that align with language instructions across diverse objects and manipulation intents.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Additional Qualitative Results -->
+<section class="section">
+  <div class="container is-max-widescreen">
+    <div class="columns is-centered has-text-centered">
+      <div class="column">
+        <h2 class="title is-3">More Qualitative Results</h2>
+      </div>
+    </div>
 
     <div class="columns is-centered">
-
-      <!-- Visual Effects. -->
-      <!-- <div class="column">
-        <div class="content">
-          <h2 class="title is-3">Visual Effects</h2>
-          <p>
-            Using <i>nerfies</i> you can create fun visual effects. This Dolly zoom effect
-            would be impossible without nerfies since it would require going through a wall.
-          </p>
-          <video id="dollyzoom" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/dollyzoom-stacked.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-      </div> -->
-      <!--/ Visual Effects. -->
-
-      <!-- Matting. -->
-      <!-- <div class="column">
-        <h2 class="title is-3">Matting</h2>
-        <div class="columns is-centered">
-          <div class="column content">
-            <p>
-              As a byproduct of our method, we can also solve the matting problem by ignoring
-              samples that fall outside of a bounding box during rendering.
-            </p>
-            <video id="matting-video" controls playsinline height="100%">
-              <source src="./static/videos/matting.mp4"
-                      type="video/mp4">
-            </video>
-          </div>
-
-        </div>
-      </div>
-    </div> -->
-    <!--/ Matting. -->
-
-    <!-- Animation. -->
-    <!-- <div class="columns is-centered">
-      <div class="column is-full-width">
-        <h2 class="title is-3">Animation</h2>
-
-        <!-- Interpolating. -->
-        <!-- <h3 class="title is-4">Interpolating states</h3>
-        <div class="content has-text-justified">
-          <p>
-            We can also animate the scene by interpolating the deformation latent codes of two input
-            frames. Use the slider here to linearly interpolate between the left frame and the right
-            frame.
-          </p>
-        </div>
-        <div class="columns is-vcentered interpolation-panel">
-          <div class="column is-3 has-text-centered">
-            <img src="./static/images/interpolate_start.jpg"
-                 class="interpolation-image"
-                 alt="Interpolate start reference image."/>
-            <p>Start Frame</p>
-          </div>
-          <div class="column interpolation-video-column">
-            <div id="interpolation-image-wrapper">
-              Loading...
-            </div>
-            <input class="slider is-fullwidth is-large is-info"
-                   id="interpolation-slider"
-                   step="1" min="0" max="100" value="0" type="range">
-          </div>
-          <div class="column is-3 has-text-centered">
-            <img src="./static/images/interpolate_end.jpg"
-                 class="interpolation-image"
-                 alt="Interpolation end reference image."/>
-            <p class="is-bold">End Frame</p>
-          </div>
-        </div>
-        <br/> -->
-        <!--/ Interpolating. -->
-
-        <!-- Re-rendering. -->
-        <!-- <h3 class="title is-4">Re-rendering the input video</h3>
-        <div class="content has-text-justified">
-          <p>
-            Using <span class="dnerf">Nerfies</span>, you can re-render a video from a novel
-            viewpoint such as a stabilized camera by playing back the training deformations.
-          </p>
-        </div>
-        <div class="content has-text-centered">
-          <video id="replay-video"
-                 controls
-                 muted
-                 preload
-                 playsinline
-                 width="75%">
-            <source src="./static/videos/replay.mp4"
-                    type="video/mp4">
-          </video>
-        </div> -->
-        <!--/ Re-rendering. -->
-
-      <!-- </div> -->
-    <!-- </div> -->
-    <!--/ Animation. -->
-
-
-    <!-- Concurrent Work. -->
-    <!-- <div class="columns is-centered">
-      <div class="column is-full-width">
-        <h2 class="title is-3">Related Links</h2>
-
-        <div class="content has-text-justified">
-          <p>
-            There's a lot of excellent work that was introduced around the same time as ours.
-          </p>
-          <p>
-            <a href="https://arxiv.org/abs/2104.09125">Progressive Encoding for Neural Optimization</a> introduces an idea similar to our windowed position encoding for coarse-to-fine optimization.
-          </p>
-          <p>
-            <a href="https://www.albertpumarola.com/research/D-NeRF/index.html">D-NeRF</a> and <a href="https://gvv.mpi-inf.mpg.de/projects/nonrigid_nerf/">NR-NeRF</a>
-            both use deformation fields to model non-rigid scenes.
-          </p>
-          <p>
-            Some works model videos with a NeRF by directly modulating the density, such as <a href="https://video-nerf.github.io/">Video-NeRF</a>, <a href="https://www.cs.cornell.edu/~zl548/NSFF/">NSFF</a>, and <a href="https://neural-3d-video.github.io/">DyNeRF</a>
-          </p>
-          <p>
-            There are probably many more by the time you are reading this. Check out <a href="https://dellaert.github.io/NeRF/">Frank Dellart's survey on recent NeRF papers</a>, and <a href="https://github.com/yenchenlin/awesome-NeRF">Yen-Chen Lin's curated list of NeRF papers</a>.
+      <div class="column is-full">
+        <div class="result-item">
+          <img src="./static/images/qual_supp.webp"
+               alt="Additional qualitative results on DexGYS"
+               style="width: 100%;">
+          <p class="result-caption">
+            Additional qualitative comparisons on the DexGYS validation set. DextER consistently generates grasps that better align with the given language instructions compared to DexGYSNet, demonstrating superior intention alignment across a variety of objects and grasp descriptions.
           </p>
         </div>
       </div>
-    </div> -->
-    <!--/ Concurrent Work. -->
-
+    </div>
   </div>
 </section>
 
 
+<!-- Dexonomy Results -->
+<section class="section">
+  <div class="container is-max-widescreen">
+    <div class="columns is-centered has-text-centered">
+      <div class="column">
+        <h2 class="title is-3">Zero-shot Generalization on Dexonomy</h2>
+      </div>
+    </div>
+
+    <div class="columns is-centered">
+      <div class="column is-full">
+        <div class="content has-text-justified" style="margin-bottom: 1.5rem;">
+          <p>
+            We evaluate DextER's zero-shot generalization on the Dexonomy dataset, which organizes grasps into a taxonomy of 31 types (e.g., power grasp, precision pinch).
+            We design data splits to test generalization to novel objects, unseen grasp taxonomies, and the challenging setting where both are novel.
+            DextER outperforms baseline methods across all settings.
+          </p>
+        </div>
+        <div class="result-item">
+          <img src="./static/images/qual_dexonomy.webp"
+               alt="Qualitative results on Dexonomy benchmark"
+               style="width: 100%;">
+          <p class="result-caption">
+            Zero-shot generalization results on Dexonomy. DextER produces grasps that more closely match the ground truth configurations compared to DexGYSNet, especially for fine-grained grasp instructions involving specific finger placements.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Steerable Generation -->
+<section class="section">
+  <div class="container is-max-widescreen">
+    <div class="columns is-centered has-text-centered">
+      <div class="column">
+        <h2 class="title is-3">Steerable Grasp Generation</h2>
+      </div>
+    </div>
+
+    <div class="columns is-centered">
+      <div class="column is-full">
+        <div class="content has-text-justified" style="margin-bottom: 1.5rem;">
+          <p>
+            Beyond standard language-conditioned generation, DextER enables <b>steerable grasp generation</b> that provides users with fine-grained control over the grasp configuration.
+            By providing a partially filled contact sequence as context (e.g., specifying 1&ndash;5 finger joints and their contact positions), users can guide the model to complete the remaining sequence while respecting these constraints.
+            Providing more steering context leads to generated grasps that more closely align with the constraints, as evidenced by drastically improved intention alignment metrics.
+          </p>
+        </div>
+        <div class="result-item">
+          <img src="./static/images/qual_steer.webp"
+               alt="Steerable grasp generation results"
+               style="width: 100%;">
+          <p class="result-caption">
+            Steerable grasp generation with varying levels of partial contact specification (Steer1&ndash;5 = specifying 1&ndash;5 finger link contacts).
+            As more contact constraints are provided, the generated grasps progressively converge toward the ground truth, demonstrating fine-grained user control over grasp synthesis.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- References -->
+<section class="section" style="background: #fafafa;">
+  <div class="container is-max-widescreen">
+    <div class="columns is-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3 has-text-centered">References</h2>
+        <div class="content">
+          <ol>
+            <li id="ref-dexgys">
+              Yi-Lin Wei, Jian-Jian Jiang, Chengyi Xing, Xian-Tuo Tan, Xiao-Ming Wu, Hao Li, Mark Cutkosky, and Wei-Shi Zheng.
+              <a href="https://arxiv.org/abs/2405.19291">Grasp as You Say: Language-guided Dexterous Grasp Generation.</a>
+              <em>NeurIPS</em>, 2024.
+            </li>
+            <li id="ref-dexonomy">
+              Jiayi Chen, Yubin Ke, Lin Peng, and He Wang.
+              <a href="https://arxiv.org/abs/2504.18829">Dexonomy: Synthesizing All Dexterous Grasp Types in a Grasp Taxonomy.</a>
+              <em>RSS</em>, 2025.
+            </li>
+            <li id="ref-partfield">
+              Minghua Liu, Mikaela Angelina Uy, Donglai Xiang, Hao Su, Sanja Fidler, Nicholas Sharp, and Jun Gao.
+              <a href="https://arxiv.org/abs/2504.11451">PartField: Learning 3D Feature Fields for Part Segmentation and Beyond.</a>
+              <em>ICCV</em>, 2025.
+            </li>
+            <li id="ref-dgtr">
+              Guo-Hao Xu, Yi-Lin Wei, Dian Zheng, Xiao-Ming Wu, and Wei-Shi Zheng.
+              <a href="https://arxiv.org/abs/2404.18135">DGTR: Dexterous Grasp Transformer.</a>
+              <em>CVPR</em>, 2024.
+            </li>
+            <li id="ref-graspcvae">
+              Kihyuk Sohn, Honglak Lee, and Xinchen Yan.
+              <a href="https://papers.nips.cc/paper_files/paper/2015/hash/8d55a249e6baa5c06772297520da2051-Abstract.html">Learning Structured Output Representation using Deep Conditional Generative Models.</a>
+              <em>NeurIPS</em>, 2015.
+            </li>
+            <li id="ref-grasptta">
+              Hanwen Jiang, Shaowei Liu, Jiashun Wang, and Xiaolong Wang.
+              <a href="https://arxiv.org/abs/2104.03304">Hand-Object Contact Consistency Reasoning for Human Grasps Generation.</a>
+              <em>ICCV</em>, 2021.
+            </li>
+            <li id="ref-scenediffusers">
+              Siyuan Huang, Zan Wang, Puhao Li, Baoxiong Jia, Tengyu Liu, Yixin Zhu, Wei Liang, and Song-Chun Zhu.
+              <a href="https://arxiv.org/abs/2301.06015">Diffusion-based Generation, Optimization, and Planning in 3D Scenes.</a>
+              <em>CVPR</em>, 2023.
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- BibTeX -->
 <section class="section" id="BibTeX">
-  <div class="container is-max-desktop content">
+  <div class="container is-max-widescreen content">
     <h2 class="title">BibTeX</h2>
     <pre><code>@article{lee2026dexter,
-  author    = {Lee, Junha and Park, Eunha and Cho, Minsu},
-  title     = {DextER: Language-driven Dexterous Grasp Generation with Embodied Reasoning},
-  journal   = {arXiv preprint arXiv:2601.00000},
-  year      = {2026},
+    title={DextER: Language-driven Dexterous Grasp Generation with Embodied Reasoning},
+    author={Lee, Junha and Park, Eunha and Cho, Minsu},
+    journal={arXiv preprint arXiv:2601.16046},
+    year={2026}
 }</code></pre>
   </div>
 </section>
@@ -420,15 +561,6 @@
 
 <footer class="footer">
   <div class="container">
-    <div class="content has-text-centered">
-      <a class="icon-link"
-         href="./static/videos/nerfies_paper.pdf">
-        <i class="fas fa-file-pdf"></i>
-      </a>
-      <a class="icon-link" href="https://github.com/keunhong" class="external-link" disabled>
-        <i class="fab fa-github"></i>
-      </a>
-    </div>
     <div class="columns is-centered">
       <div class="column is-8">
         <div class="content">
@@ -438,11 +570,8 @@
             Commons Attribution-ShareAlike 4.0 International License</a>.
           </p>
           <p>
-            This means you are free to borrow the <a
-              href="https://github.com/nerfies/nerfies.github.io">source code</a> of this website,
-            we just ask that you link back to this page in the footer.
-            Please remember to remove the analytics code included in the header of the website which
-            you do not want on your website.
+            Website template borrowed from <a
+              href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>.
           </p>
         </div>
       </div>
