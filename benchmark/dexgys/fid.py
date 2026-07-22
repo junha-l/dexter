@@ -1,6 +1,7 @@
 import glob
 import json
 import os
+from pathlib import Path
 
 import torch
 import tqdm
@@ -12,6 +13,7 @@ from torch.utils.data import DataLoader, Dataset
 from dexter.utils.shadowhand import ShadowHandModel
 
 from ..common.feature_extractor import get_model, normalize_point_clouds
+from ..common.report import report
 
 
 def get_obj_points(oid, data_root_path, use_downsample=True, key="align"):
@@ -144,8 +146,7 @@ def main(pred_path: str, data_path: str, batch_size: int = 60):
     stats_gt = compute_statistics(features_gt)
 
     fid = stats_p.frechet_distance(stats_gt)
-    with open(pred_path.replace("predictions.json", "fid.txt"), "w") as f:
-        f.write(f"FID: {fid}")
+    report(Path(pred_path).parent, "FID", {"fid": float(fid)}, n=len(pred_data))
 
 
 if __name__ == "__main__":

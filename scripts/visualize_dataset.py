@@ -129,6 +129,7 @@ class DatasetVisualization(BaseVisualization):
     ) -> None:
         super().__init__(port=port, device=device, use_mujoco=use_mujoco)
         self.dataset = dataset
+        self._scene_index = self._build_scene_index()
 
         self.current_sample: Optional[dict] = None
         self.current_hand_mesh: Optional[dict] = None
@@ -153,6 +154,20 @@ class DatasetVisualization(BaseVisualization):
             self.sample_slider = self.server.gui.add_slider(
                 "Sample Index", min=0, max=len(self.dataset) - 1, step=1, initial_value=0
             )
+
+        with self.server.gui.add_folder("Find by Scene"):
+            first_scene = self._scene_names[0]
+            self.scene_dropdown = self.server.gui.add_dropdown(
+                "Scene Name", options=self._scene_names, initial_value=first_scene
+            )
+            self.grasp_in_scene = self.server.gui.add_slider(
+                "Grasp in Scene",
+                min=0,
+                max=max(0, len(self._scene_index[first_scene]) - 1),
+                step=1,
+                initial_value=0,
+            )
+            self.scene_search_result = self.server.gui.add_markdown("")
 
         with self.server.gui.add_folder("Display Options"):
             self.show_rgb = self.server.gui.add_checkbox("Show RGB Colors", initial_value=True)
@@ -234,6 +249,8 @@ class DatasetVisualization(BaseVisualization):
         """Register UI callbacks for interactive controls."""
         self.prev_button.on_click(lambda _: self._navigate_sample(-1))
         self.next_button.on_click(lambda _: self._navigate_sample(1))
+        self.scene_dropdown.on_update(lambda _: self._on_scene_select())
+        self.grasp_in_scene.on_update(lambda _: self._on_grasp_select())
 
         for control in [
             self.sample_slider,
@@ -261,6 +278,55 @@ class DatasetVisualization(BaseVisualization):
         """Navigate to the previous or next sample."""
         new_idx = max(0, min(len(self.dataset) - 1, self.sample_slider.value + delta))
         self.sample_slider.value = new_idx
+
+    def _build_scene_index(self) -> dict[str, list[int]]:
+        """Map ``scene_name`` -> sample indices, derived cheaply from dataset internals.
+
+        DexGYS datasets expose ``(scene_name, query_index)`` pairs and Dexonomy
+        stores one directory per sample, so scene names can be recovered without
+        loading every sample. Falls back to loading each sample if neither is
+        available.
+        """
+        dataset = self.dataset
+
+        if hasattr(dataset, "flatten_indices"):
+            scene_names = [scene_name for scene_name, _ in dataset.flatten_indices]
+        elif hasattr(dataset, "files"):
+            # Path structure: .../taxonomy/object_id/floating/scale_id
+            scene_names = [
+                f"{d.parent.parent.parent.name}/{d.parent.parent.name}/{d.name}"
+                for d in dataset.files
+            ]
+        else:
+            scene_names = [dataset[i]["scene_name"] for i in range(len(dataset))]
+
+        scene_index: dict[str, list[int]] = {}
+        for idx, name in enumerate(scene_names):
+            scene_index.setdefault(name, []).append(idx)
+        self._scene_names = sorted(scene_index.keys())
+        return scene_index
+
+    def _on_scene_select(self) -> None:
+        """Point the grasp slider at the selected scene and jump to its first grasp."""
+        indices = self._scene_index[self.scene_dropdown.value]
+        self.grasp_in_scene.max = len(indices) - 1
+        # Setting value fires _on_grasp_select, which updates the sample slider.
+        if self.grasp_in_scene.value == 0:
+            self._on_grasp_select()
+        else:
+            self.grasp_in_scene.value = 0
+
+    def _on_grasp_select(self) -> None:
+        """Jump to the selected grasp within the currently selected scene."""
+        scene_name = self.scene_dropdown.value
+        indices = self._scene_index[scene_name]
+        grasp_idx = max(0, min(len(indices) - 1, int(self.grasp_in_scene.value)))
+        self.sample_slider.value = indices[grasp_idx]  # triggers _update_visualization
+        self._update_markdown(
+            self.scene_search_result,
+            f"**{scene_name}** — grasp {grasp_idx + 1}/{len(indices)} "
+            f"(sample {indices[grasp_idx] + 1}).",
+        )
 
     def _load_sample(self, idx: int) -> None:
         """Load sample from dataset and compute the hand mesh."""

@@ -121,19 +121,18 @@ def is_grasp_successful(sim_results, grasp_idx):
 # Per-object simulation (worker side — uses torch/isaacgym bound by _heavy_import)
 # --------------------------------------------------------------------------------------
 def _heavy_import():
-    """Import isaacgym/torch/pytorch3d/dexter once and bind them to module globals.
+    """Import isaacgym/torch/dexter once and bind them to module globals.
 
     Run only inside a worker process (or the in-process single-object debug path), never
     in the orchestrator. isaacgym (pulled in by validator) MUST be imported before torch.
     """
-    global torch, pytorch3d, axis_angle_to_matrix, matrix_to_quaternion
+    global torch, axis_angle_to_matrix, matrix_to_quaternion
     global IsaacValidator, ObjectModel, ShadowHandModel
     with suppress_low_level_output():
         # isort: off
         from validator import IsaacValidator  # noqa: I001,F401
-        import pytorch3d.transforms  # noqa: F401
         import torch  # noqa: F401
-        from pytorch3d.transforms import axis_angle_to_matrix, matrix_to_quaternion  # noqa: F401
+        from dexter.utils.rot import axis_angle_to_matrix, matrix_to_quaternion  # noqa: F401
         from dexter.utils.object_model import ObjectModel  # noqa: F401
         from dexter.utils.shadowhand import ShadowHandModel  # noqa: F401
         # isort: on
@@ -154,7 +153,7 @@ def optimize_joint_angles(
     contact_normals = torch.zeros((batch_size, len(hand_model.mesh), 3), device=device)
 
     global_translation = hand_state[:, 0:3]
-    global_rotation = pytorch3d.transforms.axis_angle_to_matrix(hand_state[:, 3:6])
+    global_rotation = axis_angle_to_matrix(hand_state[:, 3:6])
     current_status = hand_model.chain.forward_kinematics(hand_state[:, 6:])
 
     for i, link_name in enumerate(hand_model.mesh):

@@ -33,7 +33,7 @@ transforms:
     max_length: 144 # More space for contact + action
     training_stage: 2  # 2 = full ECoT; null = action-only
     is_training: true
-    contact_position_dropout: 0.0  # always include contact positions
+    contact_position_dropout: 0.5
     enabled: true
 
   to_tensor:

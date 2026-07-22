@@ -1,0 +1,50 @@
+[project]
+name = "dexter-isaacgym-env"
+version = "0.1.0"
+description = "Isaac Gym env for the DexGYS grasp success-rate benchmark (Part B)"
+# Isaac Gym Preview 4 declares python_requires='>=3.6,<3.9', so this env cannot be
+# merged into the main project (which needs >=3.10 for torch 2.8).
+requires-python = "==3.8.*"
+
+dependencies = [
+    # torch is pinned rather than left open: 2.4.1 is the last release with cp38
+    # wheels, so an unpinned resolve silently drifts as PyPI changes. isaacgym's
+    # own install_requires (torchvision/numpy/scipy/pyyaml/pillow/imageio/ninja)
+    # is satisfied transitively.
+    "torch==2.4.1",
+    "torchvision==0.19.1",
+    "numpy<2",
+    "isaacgym",
+    # benchmark/dexgys/success_rate.py + validator.py
+    "fire",
+    "rich",
+    # src/dexter/utils/{object_model,shadowhand}.py, imported via sys.path
+    "trimesh",
+    "open3d",
+    "lxml",
+    "six",
+    "csdf",
+    "pytorch-kinematics",
+    # Build deps for the no-build-isolation packages below, which compile in this env.
+    "setuptools",
+    "wheel",
+]
+
+# csdf compiles a CUDA extension against the installed torch, so it must build without
+# isolation. uv installs torch first, then builds csdf against it. No
+# [[tool.uv.dependency-metadata]] entry is needed: thirdparty/csdf/pyproject.toml
+# declares static [project] metadata, which uv reads without running the build backend.
+[tool.uv]
+no-build-isolation-package = ["csdf"]
+
+[tool.uv.sources]
+# Populated by setup_isaacgym.sh -- Isaac Gym is not on PyPI, and the NVIDIA download
+# URL has no file extension (uv rejects it) while its redirect target is a
+# time-limited signed URL, so it cannot be referenced directly here.
+isaacgym = { path = "../../../isaacgym/python" }
+# csdf is NOT editable here, unlike in the root pyproject. An editable install builds
+# the CUDA extension in-place in thirdparty/csdf/, which this env would compile for
+# py3.8/torch-2.4 and thereby clobber the main .venv's py3.12/torch-2.8 build of the
+# same file. Non-editable installs the .so into this venv's site-packages instead.
+csdf = { path = "../../../thirdparty/csdf" }
+pytorch-kinematics = { path = "../../../thirdparty/pytorch_kinematics", editable = true }

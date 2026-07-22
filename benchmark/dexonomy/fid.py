@@ -1,3 +1,4 @@
+import csv
 import json
 import os
 from pathlib import Path
@@ -16,6 +17,7 @@ from dexter.data.dexonomy import DexonomyPredictionDataset
 from dexter.utils.shadowhand_mujoco import RobotKinematics
 
 from ..common.feature_extractor import get_model, normalize_point_clouds
+from ..common.report import report
 
 
 def collate_fn(batch):
@@ -35,6 +37,9 @@ def collate_fn(batch):
 
 def main(pred_path: str, data_path: str = "/datasets/dexonomy/", batch_size: int = 60):
     """Compute FID and Chamfer distance between predicted and GT grasps.
+
+    Writes per-grasp chamfer.csv and upserts the headline means (`chamfer`, `fid`) into
+    metrics.json, both next to pred_path.
 
     Args:
         pred_path: path to predictions.json.
@@ -127,12 +132,21 @@ def main(pred_path: str, data_path: str = "/datasets/dexonomy/", batch_size: int
     stats_gt = compute_statistics(features_gt)
 
     fid = stats_p.frechet_distance(stats_gt)
-    with open(pred_path.replace("predictions.json", "fid.txt"), "w") as f:
-        f.write(f"FID: {fid}")
-
     chamfer_losses = torch.cat(chamfer_losses, dim=0).cpu().numpy()
-    with open(pred_path.replace("predictions.json", "chamfer_losses.json"), "w") as f:
-        json.dump(chamfer_losses.tolist(), f)
+
+    # Predictions are consumed in order (shuffle=False), so obj_ids line up with the losses.
+    with open(pred_path) as f:
+        obj_ids = [p["obj_id"] for p in json.load(f)]
+    assert len(obj_ids) == len(chamfer_losses), (len(obj_ids), len(chamfer_losses))
+
+    out_dir = Path(pred_path).parent
+    with open(out_dir / "chamfer.csv", "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(["obj_id", "chamfer"])
+        writer.writerows(zip(obj_ids, chamfer_losses.tolist()))
+
+    report(out_dir, "Chamfer", {"chamfer": float(chamfer_losses.mean())}, n=len(chamfer_losses))
+    report(out_dir, "FID", {"fid": float(fid)}, n=len(dataset))
 
 
 if __name__ == "__main__":

@@ -27,7 +27,10 @@ dependencies = [
     "wandb>=0.19.0",
     "tqdm>=4.66.0",
     "datasets>=3.0.0",
+    # Needed at runtime, and also as build deps: the no-build-isolation packages
+    # below compile in the project env, so these must be real dependencies.
     "setuptools",
+    "wheel",
     "easydict",
     "plyfile",
     "lxml",
@@ -48,7 +51,6 @@ dependencies = [
     "pointops",
     "torch-fpsample",
     "chamferdist",
-    "pytorch3d",
     "torch-scatter",
     "csdf",
     "pytorch-kinematics",
@@ -71,14 +73,41 @@ no-build-isolation-package = [
     "pointops",
     "torch-fpsample",
     "chamferdist",
-    "pytorch3d",
     "csdf",
 ]
+
+# These packages `import torch` at the top of setup.py, so uv cannot build their
+# metadata during resolution -- that happens before anything is installed, so the
+# env is still empty. Declaring the metadata statically skips the resolution-time
+# build entirely; the real compile then runs at install time, without isolation,
+# against the torch that uv installs in its first phase.
+#
+# `version` is REQUIRED here: for git/URL/path sources uv silently ignores an
+# entry that lacks it and falls back to a real PEP 517 build (the docs list the
+# field as optional, which only holds for registry deps). Each version below is
+# taken from the package's own setup.py -- keep them in sync when bumping, since
+# uv writes this value into uv.lock verbatim and a mismatch fails at install.
+#
+# csdf needs no entry: thirdparty/csdf/pyproject.toml declares static [project]
+# metadata, which uv reads directly.
+[[tool.uv.dependency-metadata]]
+name = "pointops"
+version = "1.0"
+requires-dist = ["torch"]
+
+[[tool.uv.dependency-metadata]]
+name = "torch-fpsample"
+version = "0.1.0"
+requires-dist = ["torch"]
+
+[[tool.uv.dependency-metadata]]
+name = "chamferdist"
+version = "1.0.3"
+requires-dist = ["torch"]
 
 [tool.uv.sources]
 pointops = { git = "https://github.com/Pointcept/Pointcept.git", subdirectory = "libs/pointops" }
 torch-fpsample = { git = "https://github.com/leonardodalinky/pytorch_fpsample" }
-pytorch3d = { git = "https://github.com/facebookresearch/pytorch3d.git" }
 csdf = { path = "thirdparty/csdf", editable = true }
 pytorch-kinematics = { path = "thirdparty/pytorch_kinematics", editable = true }
 torch-scatter = { index = "pyg" }

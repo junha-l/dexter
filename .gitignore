@@ -19,10 +19,15 @@ test_output*/
 # cache
 point_e_model_cache/
 tmp/
+.claude/
+.ruff_cache/
 
 # Large assets
 assets/object/
 datasets/
 
 # Thirdparty
+# isaacgym/ is vendored by benchmark/dexgys/setup_isaacgym.sh; its lockfile is
+# generated per-machine (path deps + local CUDA toolchain), so it is not tracked.
 isaacgym/
+benchmark/dexgys/isaacgym-env/uv.lock

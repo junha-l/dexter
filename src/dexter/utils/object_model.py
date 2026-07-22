@@ -4,11 +4,37 @@ Object model for DexGYS dataset using csdf for SDF computation.
 
 import os
 
-import pytorch3d.ops
-import pytorch3d.structures
 import torch
 import trimesh as tm
 from csdf import compute_sdf, index_vertices_by_faces
+
+
+def farthest_point_sample(points, num_samples):
+    """Farthest point sampling, seeded at index 0.
+
+    Equivalent to pytorch3d.ops.sample_farthest_points with random_start_point=False,
+    which this replaces so the package does not need to be installed.
+
+    Parameters
+    ----------
+    points: (N, 3) torch.Tensor
+    num_samples: int
+
+    Returns
+    -------
+    (num_samples, 3) torch.Tensor
+    """
+    n = points.shape[0]
+    if num_samples >= n:
+        return points
+    selected = torch.zeros(num_samples, dtype=torch.long, device=points.device)
+    closest = torch.full((n,), float("inf"), device=points.device)
+    farthest = torch.zeros((), dtype=torch.long, device=points.device)
+    for i in range(num_samples):
+        selected[i] = farthest
+        closest = torch.minimum(closest, (points - points[farthest]).pow(2).sum(-1))
+        farthest = closest.argmax()
+    return points[selected]
 
 
 class ObjectModel:
@@ -52,20 +78,14 @@ class ObjectModel:
             self.object_face_verts_list.append(index_vertices_by_faces(object_verts, object_faces))
 
             if self.num_samples != 0:
-                vertices = torch.tensor(
-                    self.object_mesh_list[-1].vertices, dtype=torch.float, device=self.device
+                # Area-weighted dense sample, then FPS down to num_samples for even
+                # surface coverage.
+                dense_point_cloud = torch.tensor(
+                    self.object_mesh_list[-1].sample(100 * self.num_samples),
+                    dtype=torch.float,
+                    device=self.device,
                 )
-                faces = torch.tensor(
-                    self.object_mesh_list[-1].faces, dtype=torch.float, device=self.device
-                )
-                mesh = pytorch3d.structures.Meshes(vertices.unsqueeze(0), faces.unsqueeze(0))
-                dense_point_cloud = pytorch3d.ops.sample_points_from_meshes(
-                    mesh, num_samples=100 * self.num_samples
-                )
-                surface_points = pytorch3d.ops.sample_farthest_points(
-                    dense_point_cloud, K=self.num_samples
-                )[0][0]
-                surface_points = surface_points.to(dtype=torch.float, device=self.device)
+                surface_points = farthest_point_sample(dense_point_cloud, self.num_samples)
                 self.surface_points_tensor.append(surface_points)
 
         if self.num_samples != 0:
